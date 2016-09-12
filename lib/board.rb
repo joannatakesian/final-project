@@ -25,4 +25,12 @@ class Board
         end
         puts "  | #{top_labels.join(' | ')} |"
     end
+    
+    def add_row(x, pieces)
+        @spaces[x] = pieces
+    end
+    
+    def add_piece(x, y, piece)
+        @spaces[x][y] = piece
+    end
 end
