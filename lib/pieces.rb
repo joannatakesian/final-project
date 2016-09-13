@@ -1,8 +1,17 @@
 class Pieces
     attr_accessor :color
     
-    def initialize(color)
+    def initialize(name, color, y, x)
+        @name = name
         @color = color
+        @row = y
+        @column = x
+        
+        place_piece(y, x)
+    end
+    
+    def place_piece(x, y)
+        x = x y = y
     end
     
     def symbol
@@ -11,60 +20,60 @@ class Pieces
 end
 
 class King < Pieces
-    def initialize(color)
-        if color == 'black'
+    def initialize(name, color, y, x)
+        if color == 'white'
             @symbol = "\u265a"
-        elsif color == 'white'
+        elsif color == 'black'
             @symbol = "\u2654"
         end
     end
 end
 
 class Queen < Pieces
-    def initialize(color)
-        if color == 'black'
+    def initialize(name, color, y, x)
+        if color == 'white'
             @symbol = "\u265b"
-        elsif color == 'white'
+        elsif color == 'black'
             @symbol = "\u2655"
         end
     end
 end
 
 class Bishop < Pieces
-    def initialize(color)
-        if color == 'black'
+    def initialize(name, color, y, x)
+        if color == 'white'
             @symbol = "\u265d"
-        elsif color == 'white'
+        elsif color == 'black'
             @symbol = "\u2657"
         end
     end
 end
 
 class Knight < Pieces
-    def initialize(color)
-        if color == 'black'
+    def initialize(name, color, y, x)
+        if color == 'white'
             @symbol = "\u265e"
-        elsif color == 'white'
+        elsif color == 'black'
             @symbol = "\u2658"
         end
     end
 end
 
 class Rook < Pieces
-    def initialize(color)
-        if color == 'black'
+    def initialize(name, color, y, x)
+        if color == 'white'
             @symbol = "\u265c"
-        elsif color == 'white'
+        elsif color == 'black'
             @symbol = "\u2656"
         end
     end
 end
 
 class Pawn < Pieces
-    def initialize(color)
-        if color == 'black'
+    def initialize(name, color, y, x)
+        if color == 'white'
             @symbol = "\u265f"
-        elsif color == 'white'
+        elsif color == 'black'
             @symbol = "\u2659"
         end
     end
