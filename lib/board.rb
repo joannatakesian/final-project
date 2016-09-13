@@ -50,10 +50,13 @@ class Board
                 Rook.new('rook two', 'white', 0, 7)
                 ]
             ]
+        
+        @rows = [8, 7, 6, 5, 4, 3, 2, 1]
+        @columns = [*'A'..'H']
     end
     
     def show_board
-        top_labels = ('a'..'h').to_a
+        top_labels = ('A'..'H').to_a
         puts '  ---------------------------------'
         @spaces.each_with_index do |line, index|
             printf "#{8 - index} | "
@@ -68,5 +71,34 @@ class Board
             puts '  ---------------------------------'
         end
         puts "  | #{top_labels.join(' | ')} |"
+    end
+    
+    def select_piece(color)        
+        printf "Enter the piece you'd like to move (ex. A1):"
+        selected = gets.chomp.upcase.split('')
+        
+        if selected[1] != nil && @rows.include?(selected[1].to_i)
+            row = @rows.index(selected[1].to_i)
+            if selected[0] != nil && @columns.include?(selected[0])
+                column = @columns.index(selected[0])
+                if @spaces[row][column] != ' '
+                    if @spaces[row][column].color == color
+                        puts "#{@spaces[row][column].symbol} (#{@spaces[row][column].name}) selected..."
+                    else
+                        puts "Sorry, that's not your piece."
+                        self.select_piece(color)
+                    end
+                else
+                    puts "Sorry, that space is empty."
+                    self.select_piece(color)
+                end
+            else
+                puts "Sorry, that's not a valid space."
+                self.select_piece(color)
+            end
+        else
+            puts "Sorry, that's not a valid space."
+            self.select_piece(color)
+        end
     end
 end

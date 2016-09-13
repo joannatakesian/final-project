@@ -6,21 +6,26 @@ class Pieces
         @color = color
         @row = y
         @column = x
-        
-        place_piece(y, x)
-    end
-    
-    def place_piece(x, y)
-        x = x y = y
+        @symbol = nil
     end
     
     def symbol
         return @symbol
     end
+    
+    def name
+        return @name
+    end
+    
+    def color
+        return @color
+    end
 end
 
 class King < Pieces
     def initialize(name, color, y, x)
+        @name = name
+        @color = color
         if color == 'white'
             @symbol = "\u265a"
         elsif color == 'black'
@@ -31,6 +36,8 @@ end
 
 class Queen < Pieces
     def initialize(name, color, y, x)
+        @name = name
+        @color = color
         if color == 'white'
             @symbol = "\u265b"
         elsif color == 'black'
@@ -41,6 +48,8 @@ end
 
 class Bishop < Pieces
     def initialize(name, color, y, x)
+        @name = name
+        @color = color
         if color == 'white'
             @symbol = "\u265d"
         elsif color == 'black'
@@ -51,6 +60,8 @@ end
 
 class Knight < Pieces
     def initialize(name, color, y, x)
+        @name = name
+        @color = color
         if color == 'white'
             @symbol = "\u265e"
         elsif color == 'black'
@@ -61,6 +72,8 @@ end
 
 class Rook < Pieces
     def initialize(name, color, y, x)
+        @name = name
+        @color = color
         if color == 'white'
             @symbol = "\u265c"
         elsif color == 'black'
@@ -71,6 +84,8 @@ end
 
 class Pawn < Pieces
     def initialize(name, color, y, x)
+        @name = name
+        @color = color
         if color == 'white'
             @symbol = "\u265f"
         elsif color == 'black'
