@@ -20,7 +20,6 @@ class Game
                 puts "#{player} player's turn".upcase
                 @board.select_piece(player)
             end
-            @game_over = true
         end
     end
 end

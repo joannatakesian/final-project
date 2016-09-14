@@ -30,29 +30,31 @@ class Board
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '], 
             [' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '], 
             [
-                Pawn.new('pawn one', 'white', 1, 0),
-                Pawn.new('pawn two', 'white', 1, 1),
-                Pawn.new('pawn three', 'white', 1, 2),
-                Pawn.new('pawn four', 'white', 1, 3),
-                Pawn.new('pawn five', 'white', 1, 4),
-                Pawn.new('pawn six', 'white', 1, 5),
-                Pawn.new('pawn seven', 'white', 1, 6),
-                Pawn.new('pawn eight', 'white', 1, 7)
+                Pawn.new('pawn one', 'white', 6, 0),
+                Pawn.new('pawn two', 'white', 6, 1),
+                Pawn.new('pawn three', 'white', 6, 2),
+                Pawn.new('pawn four', 'white', 6, 3),
+                Pawn.new('pawn five', 'white', 6, 4),
+                Pawn.new('pawn six', 'white', 6, 5),
+                Pawn.new('pawn seven', 'white', 6, 6),
+                Pawn.new('pawn eight', 'white', 6, 7)
                 ], 
             [
-                Rook.new('rook one', 'white', 0, 0),
-                Knight.new('knight one', 'white', 0, 1),
-                Bishop.new('bishop one', 'white', 0, 2),
-                King.new('king', 'white', 0, 3),
-                Queen.new('queen', 'white', 0, 4),
-                Bishop.new('bishop two', 'white', 0, 5),
-                Knight.new('knight two', 'white', 0, 6),
-                Rook.new('rook two', 'white', 0, 7)
+                Rook.new('rook one', 'white', 7, 0),
+                Knight.new('knight one', 'white', 7, 1),
+                Bishop.new('bishop one', 'white', 7, 2),
+                King.new('king', 'white', 7, 3),
+                Queen.new('queen', 'white', 7, 4),
+                Bishop.new('bishop two', 'white', 7, 5),
+                Knight.new('knight two', 'white', 7, 6),
+                Rook.new('rook two', 'white', 7, 7)
                 ]
             ]
         
         @rows = [8, 7, 6, 5, 4, 3, 2, 1]
         @columns = [*'A'..'H']
+        @king_white = @spaces[0][4]
+        @king_black = @spaces[7][4]
     end
     
     def show_board
@@ -74,7 +76,7 @@ class Board
     end
     
     def select_piece(color)        
-        printf "Enter the piece you'd like to move (ex. A1):"
+        printf "Enter the piece you'd like to move (ex. A1): "
         selected = gets.chomp.upcase.split('')
         
         if selected[1] != nil && @rows.include?(selected[1].to_i)
@@ -84,6 +86,8 @@ class Board
                 if @spaces[row][column] != ' '
                     if @spaces[row][column].color == color
                         puts "#{@spaces[row][column].symbol} (#{@spaces[row][column].name}) selected..."
+                        
+                        find_moves(@spaces[row][column], row, column)
                     else
                         puts "Sorry, that's not your piece."
                         self.select_piece(color)
@@ -100,5 +104,31 @@ class Board
             puts "Sorry, that's not a valid space."
             self.select_piece(color)
         end
+    end
+    
+    def find_moves(piece, origin_y, origin_x)
+        legal_moves = piece.get_legal_moves(@spaces)
+        puts "Legal moves: #{legal_moves.join(', ')}"
+        
+        printf "Enter destination space (ex. A1): "
+        destination = gets.chomp.split('')
+        
+        if legal_moves.include?(destination.join)
+            puts "Moving #{piece.symbol} (#{piece.name}) to #{destination.join('')}..."
+            row = @rows.index(destination[1].to_i)
+            column = @columns.index(destination[0])
+                
+            piece.change_coordinates(row, column)
+            move_piece(piece, row, column, origin_y, origin_x)
+        else
+            puts "Sorry, that's not a valid move."
+            find_moves(piece, origin_y, origin_x)
+        end
+    end
+    
+    def move_piece(piece, y, x, origin_y, origin_x)
+        @spaces[origin_y][origin_x] = ' '
+        @spaces[y][x] = piece
+        show_board
     end
 end
