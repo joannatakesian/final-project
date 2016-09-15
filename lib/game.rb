@@ -6,6 +6,7 @@ class Game
     def initialize
         @game_over = false
         @board = Board.new
+        puts "Let's play a game..."
         @board.show_board
         round
     end

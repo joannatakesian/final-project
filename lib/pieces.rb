@@ -30,12 +30,27 @@ class Pieces
         return "Error."
     end
     
-    def diagonal_move(board, y, x)
-        #recursively add moves until a piece is taken or the space is nil or a piece is encountered of the same color
-    end
-    
-    def lateral_move(board, y, x)
-        #recursively add moves until a piece is taken or the space is nil or a piece is encountered of the same color
+    def recursive_move(board, y, x, direction_y, direction_x)
+        rows = [8, 7, 6, 5, 4, 3, 2, 1]
+        columns = [*'A'..'H']
+        
+        new_y = y + direction_y
+        new_x = x + direction_x
+        
+        if new_y >= 0 && new_y < 8
+            if new_x >= 0 && new_x < 8
+                if board[new_y][new_x] == ' '
+                    @legal_moves << "#{columns[new_x]}#{rows[new_y]}"
+                    if new_y + direction_y >= 0 && new_y + direction_y < 8
+                        if new_x + direction_x >= 0 && new_x + direction_x < 8
+                            recursive_move(board, new_y, new_x, direction_y, direction_x)
+                        end
+                    end
+                elsif board[new_y][new_x].color != color
+                    @legal_moves << "#{columns[new_x]}#{rows[new_y]}"
+                end
+            end
+        end
     end
 end
 
@@ -90,6 +105,7 @@ class Queen < Pieces
         @color = color
         @row = y
         @column = x
+        @legal_moves = []
         if color == 'white'
             @symbol = "\u265b"
         elsif color == 'black'
@@ -98,8 +114,23 @@ class Queen < Pieces
     end
     
     def get_legal_moves(board)
-        #use lateral_move method in each direction
-        #use diagonal_move method in each direction
+        @legal_moves.clear
+        possible_moves = [
+            [1, 1],
+            [1, -1],
+            [-1, 1],
+            [-1, -1],
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1]
+            ]
+        
+        possible_moves.each do |move|
+            recursive_move(board, @row, @column, move[0], move[1])
+        end
+        
+        return @legal_moves
     end
 end
 
@@ -109,6 +140,7 @@ class Bishop < Pieces
         @color = color
         @row = y
         @column = x
+        @legal_moves = []
         if color == 'white'
             @symbol = "\u265d"
         elsif color == 'black'
@@ -117,7 +149,19 @@ class Bishop < Pieces
     end
     
     def get_legal_moves(board)
-        #use diagonal_move method in each direction
+        @legal_moves.clear
+        possible_moves = [
+            [1, 1],
+            [1, -1],
+            [-1, 1],
+            [-1, -1]
+            ]
+        
+        possible_moves.each do |move|
+            recursive_move(board, @row, @column, move[0], move[1])
+        end
+        
+        return @legal_moves
     end
 end
 
@@ -150,11 +194,17 @@ class Knight < Pieces
             [@row - 1, @column - 2]
             ]
         
-        #must try moves in both directions (x move first, then y move first)
-        
         possible_moves.each do |move|
             y = move[0]
             x = move[1]
+            
+            if x >= 0 && x < 8
+                if y >= 0 && y < 8
+                    if board[y][x] == ' ' || board[y][x].color != color
+                        legal_moves << "#{columns[x]}#{rows[y]}"
+                    end
+                end
+            end
         end
         
         return legal_moves
@@ -167,6 +217,7 @@ class Rook < Pieces
         @color = color
         @row = y
         @column = x
+        @legal_moves = []
         if color == 'white'
             @symbol = "\u265c"
         elsif color == 'black'
@@ -175,7 +226,19 @@ class Rook < Pieces
     end
     
     def get_legal_moves(board)
-        #use lateral_move method in each direction
+        @legal_moves.clear
+        possible_moves = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1]
+            ]
+        
+        possible_moves.each do |move|
+            recursive_move(board, @row, @column, move[0], move[1])
+        end
+        
+        return @legal_moves
     end
 end
 
@@ -209,10 +272,10 @@ class Pawn < Pieces
                 end
             end
             #take a piece
-            if board[@row - 1][@column + 1] != " " && board[@row - 1][@column + 1] != nil
+            if board[@row - 1][@column + 1] != " " && board[@row - 1][@column + 1] != nil && board[@row - 1][@column + 1].color != color
                 legal_moves << "#{columns[@column + 1]}#{rows[@row - 1]}"
             end
-            if board[@row - 1][@column - 1] != " " && board[@row - 1][@column - 1] != nil
+            if board[@row - 1][@column - 1] != " " && board[@row - 1][@column - 1] != nil && board[@row - 1][@column + 1].color != color
                 legal_moves << "#{columns[@column - 1]}#{rows[@row - 1]}"
             end
         elsif @color == 'black'
@@ -227,10 +290,10 @@ class Pawn < Pieces
                 end
             end
             #take a piece
-            if board[@row + 1][@column + 1] != " " && board[@row + 1][@column + 1] != nil
+            if board[@row + 1][@column + 1] != " " && board[@row + 1][@column + 1] != nil && board[@row + 1][@column + 1].color != color
                 legal_moves << "#{columns[@column + 1]}#{rows[@row + 1]}"
             end
-            if board[@row + 1][@column - 1] != " " && board[@row + 1][@column - 1] != nil
+            if board[@row + 1][@column - 1] != " " && board[@row + 1][@column - 1] != nil && board[@row + 1][@column - 1].color != color
                 legal_moves << "#{columns[@column - 1]}#{rows[@row + 1]}"
             end
         end
