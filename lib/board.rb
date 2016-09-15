@@ -108,16 +108,22 @@ class Board
     
     def find_moves(piece, origin_y, origin_x)
         legal_moves = piece.get_legal_moves(@spaces)
-        puts "Legal moves: #{legal_moves.join(', ')}"
         
+        if legal_moves.empty?
+            puts "Sorry, no legal moves."
+            select_piece(piece.color)
+        end
+        
+        puts "Legal moves: #{legal_moves.join(', ')}"
+
         printf "Enter destination space (ex. A1): "
         destination = gets.chomp.split('')
-        
+
         if legal_moves.include?(destination.join)
             puts "Moving #{piece.symbol} (#{piece.name}) to #{destination.join('')}..."
             row = @rows.index(destination[1].to_i)
             column = @columns.index(destination[0])
-                
+
             piece.change_coordinates(row, column)
             move_piece(piece, row, column, origin_y, origin_x)
         else
@@ -130,5 +136,24 @@ class Board
         @spaces[origin_y][origin_x] = ' '
         @spaces[y][x] = piece
         show_board
+    end
+    
+    def game_over
+        kings = 0
+        
+        @spaces.each do |row|
+            row.each do |space|
+                if space != ' '
+                    kings += 1 if space.name == 'king'
+                end
+            end
+        end
+        
+        if kings < 2
+            puts "Game over!"
+            return true
+        else
+            return false
+        end
     end
 end

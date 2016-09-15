@@ -19,6 +19,8 @@ class Game
             @players.each do |player|
                 puts "#{player} player's turn".upcase
                 @board.select_piece(player)
+                @game_over = @board.game_over
+                break if @game_over == true
             end
         end
     end
